@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup as bs
 from threading import Thread
 from base64 import b64decode as bd
 from random import choice, randint
-from pyperclip import copy
+from webbrowser import open_new
 
 
 
@@ -20,6 +20,7 @@ from pyperclip import copy
 author = "{}".format(bd("YmlsbHl0aGVnb2F0MzU2").decode('utf-8'))
 
 
+# GOOGLE SEARCH CLASS
 
 class GoogleSearch():
 
@@ -107,7 +108,7 @@ class GoogleSearch():
     class QueryError(Exception): ...
 
 
-
+# GOOGLE DORKS CLASS
 
 class Dorks:
 
@@ -134,11 +135,11 @@ class Dorks:
         title = text if advanced else None
         return GoogleSearch.search(results_len=results_len, random=random, site=website, intitle=title, intext=text)
 
-    # add Pornhub et YouTube
     
 
 
 
+# TKINTER GUI SETUP
 
 class GUI:
     def __init__(self):
@@ -252,30 +253,29 @@ class GUI:
             self.links.insert(number, result)
         self.links.pack(side=tk.BOTTOM)
 
-        self.copy_button = tk.Button(self.window, text = "Copier le lien", font= ("Times New Roman", 10), bg = "black", fg = "white", command = self.copy_scale)
-        self.copy_button.place(x=505, y=450)
-        self.pass_button = tk.Button(self.window, text = "Ignorer", font= ("Times New Roman", 10), bg = "black", fg = "white", command = self.pass_scale)
-        self.pass_button.place(x=520, y=480)
+        self.open_button = tk.Button(self.window, text = "Ouvrir", font= ("Times New Roman", 10), bg = "black", fg = "white", command = self.open_link)
+        self.open_button.place(x=520, y=450)
+        self.skip_button = tk.Button(self.window, text = "Passer", font= ("Times New Roman", 10), bg = "black", fg = "white", command = self.skip_link)
+        self.skip_button.place(x=520, y=480)
 
 
-    def copy_scale(self, ignore=False):
+    def open_link(self, ignore=False):
         
         try:
             if not ignore:
-                copy(self.links.get(self.links.curselection()))
+                open_new(self.links.get(self.links.curselection()))
         except tk.TclError:
             return
 
+
+    def skip_link(self):
         self.modes.pack_forget()
         self.search_button.place(x=510, y=550)
-        self.copy_button.place_forget()
-        self.pass_button.place_forget()
-        self.results_label.place_forget()
-        self.text.delete(0, len(self._search_text.get()))
+        self.open_button.place_forget()
+        self.skip_button.place_forget()
+        self.links.pack_forget()
+        self.text.delete(0, len(self.text.get()))
         self.text.place(x=440, y=500, width=200)
-
-    def pass_scale(self):
-        self.copy_scale(ignore=True)
 
 
 
@@ -326,6 +326,8 @@ class GUI:
         self.set_all()
         self.window.mainloop()
 
+        
+# START
 
 if __name__ == '__main__':
     GUI()
